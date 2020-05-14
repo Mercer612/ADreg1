@@ -6,7 +6,6 @@
     <title>Управление персоналом</title>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
-    <script src="./scr.js"></script>
     <link rel="stylesheet" type="text/css" href="./styles.css">
 
 </head>
@@ -26,10 +25,10 @@ function clean_text($string)
 $email = '';
 $email = clean_text($_GET["email"]);
 //var_dump($email);
-var_dump($_POST);
+//var_dump($_POST);
 ?>
 <div class="form">
-    <form class="login-form" action="select.php" method="post">
+    <form class="login-form" action="mainpage.php" method="post">
     <h1 align="center">Почта для сотрудника успешно создана!</h1>
     <br/>
     <h2 align="center">Почта: <?php echo $email;?></h2>

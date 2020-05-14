@@ -122,7 +122,7 @@ $us = $name.' '.$surname.' '.$email.' '.$depart.' '.$desc/*.' '.$phone*/;
 
 //вызываем наш скрипт, подкидываем ему значения полей из формы
 if ($us !== "0")
-{$reg = Shell_Exec ('powershell.exe -ExecutionPolicy ByPass -NoProfile -File C:\inetpub\wwwroot\newad.ps1 '.$us.'');}
+{$reg = Shell_Exec ('powershell.exe -ExecutionPolicy ByPass -NoProfile -File C:\inetpub\wwwroot\newreg.ps1 '.$us.'');}
 
 //вывод результата скрипта в окно браузера. уже не актуально. оставлю для дебага.
 //echo $reg;
@@ -131,7 +131,7 @@ if ($us !== "0")
 	$reg = trim($reg);
 
 //вывод полного содержания переменной в браузер. для дебага
-var_dump($reg);
+//var_dump($reg);
 //var_dump($_POST);
 //var_dump($error);
 
@@ -139,7 +139,7 @@ var_dump($reg);
 if ($reg == 'S1') {
     if ($email !== '')
     {
-        // {$message = $success;}
+         //{$message = $success;}
         header("Location: http://localhost/done.php?email=$email");
     }
 }
@@ -147,6 +147,7 @@ elseif ($reg == 'S2')
     {$message .= $faillogin;}
 elseif ($reg == 'S3')
     {$message .= $failemail;}
+//вывод сообщения вынесен в отрисовку new.php
 //if ($reg !== null)
 //{echo $message;}
 
