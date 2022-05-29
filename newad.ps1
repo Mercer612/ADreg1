@@ -1,7 +1,7 @@
 Import-Module ActiveDirectory
 Set-ExecutionPolicy ByPass  
 
-#получаем значени€ переменных из веб-формы
+#Get parameters from php side
 $Name = $args[0] 
 
 $Surname = $args[1] 
@@ -22,38 +22,37 @@ $Password="Qwertyuiop123"
 
 $SecurePwd = ConvertTo-SecureString -AsPlainText -Force -String $Password 
 
-#функци€ склейки подразделени€ и домена
-$OUTmp = $OU ЦSplit У/Ф
+#Department+Domain
+$OUTmp = $OU вАУSplit вАЬ/вАЭ
 
-$Path = УФ 
+$Path = вАЬвАЭ 
 
 $OUTmp | ForEach-Object {$Path = "OU=$_," + $Path}
 
-$Path += УDC=localtest,DC=comФ
+$Path += вАЬDC=localtest,DC=comвАЭ
 
-$Displayname = $Name + " " + $Surname #в кавычках Ц пробел 
+$Displayname = $Name + " " + $Surname #there is a space in quotes
 
-$Login = $Mail.Split("@")[-2] #отдел€ем SAMAccName от почтового суффикса
+$Login = $Mail.Split("@")[-2] #split SAMAccountName from mail domain
 
-$UserPrincipalName = $Mail #логин дл€ входа = почта
+$UserPrincipalName = $Mail 
 
-#запускаем командлет PS дл€ создани€ пользовател€ с нашими данными
-#делаем проверки на существующий логин\почту
-$login_check = [bool] (Get-ADUser -Filter { SamAccountName -eq $Login }) #есть юзер с таким SAM-логином ? да\нет
-$email_check = [bool] (Get-ADUser -Filter { EmailAddress -eq $Mail }) #есть юзер с такой почтой ? да\нет
-$name_check = [bool] (Get-ADUser -Filter { DisplayName -eq $DisplayName }) #есть юзер с таким выводимым именем? да\нет
-if ($login_check -ne $True) { #1 если юзера с таким логином нет
-    if ($email_check -ne $True) { #2 если юзера с такой почтой нет
-        if ($name_check -ne $True) { #3 если юзера с таким именем нет
- New-ADUser $Displayname ЦSamAccountName $Login -GivenName $Name -Surname $Surname -Company $Company ЦUserPrincipalName $Mail -OfficePhone $Phone -Description $Desc -Title $Desc  -EmailAddress $Mail -DisplayName $DisplayName -Enabled $true -AccountPassword $SecurePwd -ChangePasswordAtLogon 1 -Path $Path 
-echo "S1"} #3 создать юзера с текущими параметрами и вывести S1
-    else { #3 или
-    $Displayname = $Name + " " + $Midname + " " + $Surname #модифицируем выводимое им€
-    New-ADUser $DisplayName ЦSamAccountName $Login  -GivenName $Name -Surname $Surname -Company $Company ЦUserPrincipalName $Mail -OfficePhone $Phone -Description $Desc -Title $Desc  -EmailAddress $Mail -DisplayName $DisplayName -Enabled $true -AccountPassword $SecurePwd -ChangePasswordAtLogon 1 -Path $Path 
-echo "S1"} #3 создать юзера с модифицированными параметрами и вывести S1
+#Check if login or mail exists
+$login_check = [bool] (Get-ADUser -Filter { SamAccountName -eq $Login }) #check if the same samaccount name exists 
+$email_check = [bool] (Get-ADUser -Filter { EmailAddress -eq $Mail }) #check if the same mail exists
+$name_check = [bool] (Get-ADUser -Filter { DisplayName -eq $DisplayName }) #check if the same displayname name exists
+if ($login_check -ne $True) { #1 if the same samaccount name doesn't exist
+    if ($email_check -ne $True) { #2  if the same mail doesn't exist
+        if ($name_check -ne $True) { #3  if the same displayname doesn't exist
+ New-ADUser $Displayname вАУSamAccountName $Login -GivenName $Name -Surname $Surname -Company $Company вАУUserPrincipalName $Mail -OfficePhone $Phone -Description $Desc -Title $Desc  -EmailAddress $Mail -DisplayName $DisplayName -Enabled $true -AccountPassword $SecurePwd -ChangePasswordAtLogon 1 -Path $Path 
+echo "S1"} #3 create user and echo "S1" as a result (we'll use it for the next php-page)
+    else { #3 or
+    $Displayname = $Name + " " + $Midname + " " + $Surname #modify DisplayName with spaces
+    New-ADUser $DisplayName вАУSamAccountName $Login  -GivenName $Name -Surname $Surname -Company $Company вАУUserPrincipalName $Mail -OfficePhone $Phone -Description $Desc -Title $Desc  -EmailAddress $Mail -DisplayName $DisplayName -Enabled $true -AccountPassword $SecurePwd -ChangePasswordAtLogon 1 -Path $Path 
+echo "S1"} #3 create user and echo "S1" as a result (we'll use it for the next php-page)
 }
-    else {echo "S2"} #2 юзер с такой почтой есть! вывести S2
+    else {echo "S2"} #2 the user with the same mail exists. echo "S2"
 }
-else {echo "S3"} #1 юзер с таким логином есть! вывести S3
+else {echo "S3"} #1 the user with the same samaccountname exists. echo "S3"
 
-$Name = $Surname = $OU =$Mail = $Desc = $Phone = '' #очищаем переменные дл€ следующего цикла
+$Name = $Surname = $OU =$Mail = $Desc = $Phone = '' #clear var-s for the next load of php-page
