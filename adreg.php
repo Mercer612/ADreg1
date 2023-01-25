@@ -9,7 +9,7 @@
     <link rel="stylesheet" type="text/css" href="./styles.css">
 </head>
 <body>
-<p><img src="./logo.png" alt="Embria" class="center"></p>
+<p><img src="./logo.png" alt="Logo" class="center"></p>
 <br />
   <br />
     <form action="reg.php" method="post">
