@@ -11,7 +11,7 @@
 
 </head>
 <body>
-<p><img src="./logo.png" alt="Embria" class="center"></p>
+<p><img src="./logo.png" alt="Logo" class="center"></p>
 <br />
 <?php
 //очищаем вывод от спецсимволов и пробелов
